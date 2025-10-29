@@ -1,11 +1,10 @@
 package com.company.dynamicdatastore.view.dynamicdatastore;
 
-import com.company.dynamicdatastore.dynamic.EntityMeta;
-import com.company.dynamicdatastore.dynamic.RuntimeFieldDef;
+import com.company.dynamicdatastore.dynamic.DynamicEntity;
+import com.company.dynamicdatastore.dynamic.DynamicField;
 import com.company.dynamicdatastore.dynamic.registry.DynamicStoreRegistry;
-import com.company.dynamicdatastore.dynamic.runtime.DynamicMetaClassFactory;
+import com.company.dynamicdatastore.dynamic.meta.DynamicMetaClassFactory;
 import com.company.dynamicdatastore.dynamic.virtual.VirtualEntityHandler;
-import com.company.dynamicdatastore.entity.User;
 import com.company.dynamicdatastore.view.main.MainView;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.DataManager;
@@ -13,7 +12,6 @@ import io.jmix.core.LoadContext;
 import io.jmix.core.ValueLoadContext;
 import io.jmix.core.entity.KeyValueEntity;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.model.KeyValueCollectionContainer;
 import io.jmix.flowui.view.*;
@@ -29,7 +27,7 @@ import java.util.UUID;
  * Màn hình test full pipeline runtime:
  *
  * 1. Tạo store động "storeA"
- * 2. Khai báo entity ảo "VirtualOrder" (EntityMeta)
+ * 2. Khai báo entity ảo "VirtualOrder" (DynamicEntity)
  * 3. Gắn handler runtime cho "VirtualOrder"
  * 4. Tạo MetaClass động cho "VirtualOrder" và đăng ký vào registry
  * 5. Gọi DataManager.loadValues(...).store("storeA") để lấy dữ liệu
@@ -73,7 +71,7 @@ public class DynamicDataStore extends StandardView {
         registry.registerStore("storeA");
 
         // B2. Đăng ký metadata logic của entity ảo (thông tin field kiểu Java)
-        EntityMeta virtualOrderMeta = new EntityMeta();
+        DynamicEntity virtualOrderMeta = new DynamicEntity();
         virtualOrderMeta.setName("VirtualOrder");
         virtualOrderMeta.setAttributes(Map.of(
                 "id", UUID.class,
@@ -149,9 +147,9 @@ public class DynamicDataStore extends StandardView {
          MetaClass meta = dynamicMetaClassFactory.buildAndRegisterMetaClass(
                 "VirtualOrder",
                 List.of(
-                        new RuntimeFieldDef("id", UUID.class),
-                        new RuntimeFieldDef("name", String.class),
-                        new RuntimeFieldDef("amount", BigDecimal.class)
+                        new DynamicField("id", UUID.class),
+                        new DynamicField("name", String.class),
+                        new DynamicField("amount", BigDecimal.class)
                 ),
                 "storeA"
         );

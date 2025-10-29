@@ -2,11 +2,11 @@ package com.company.dynamicdatastore.dynamic;
 
 import java.util.Map;
 
-public class EntityMeta {
+public class DynamicEntity {
     private String name;                      // Entity name
     private Map<String, Class<?>> attributes; // Fields
 
-    public EntityMeta() {
+    public DynamicEntity() {
     }
 
     public String getName() {

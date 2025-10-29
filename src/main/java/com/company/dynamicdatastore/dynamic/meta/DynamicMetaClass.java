@@ -1,4 +1,4 @@
-package com.company.dynamicdatastore.dynamic;
+package com.company.dynamicdatastore.dynamic.meta;
 
 import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
 

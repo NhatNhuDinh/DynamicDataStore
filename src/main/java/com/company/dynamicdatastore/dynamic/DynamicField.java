@@ -1,10 +1,10 @@
 package com.company.dynamicdatastore.dynamic;
 
-public class RuntimeFieldDef {
+public class DynamicField {
     private final String name;
     private final Class<?> javaType;
 
-    public RuntimeFieldDef(String name, Class<?> javaType) {
+    public DynamicField(String name, Class<?> javaType) {
         this.name = name;
         this.javaType = javaType;
     }

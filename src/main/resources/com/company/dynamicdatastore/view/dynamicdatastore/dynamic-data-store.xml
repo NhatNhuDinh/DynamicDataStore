@@ -17,9 +17,6 @@
                       dataContainer="rowsDc"
                       width="100%"
                       height="100%">
-                <columns>
-                    <column property="name"/>
-                </columns>
             </dataGrid>
         </vbox>
     </layout>

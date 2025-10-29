@@ -32,7 +32,8 @@ public class DynamicDataStore extends AbstractDataStore {
     private String storeName;
 
     // mô tả schema động (optional, để tra cứu)
-    private final Map<String, EntityMeta> entities = new ConcurrentHashMap<>();
+    private final Map<String, DynamicEntity> entities = new ConcurrentHashMap<>();
+
 
     // entityName -> handler logic load
     private final Map<String, VirtualEntityHandler<?>> handlers = new ConcurrentHashMap<>();
@@ -59,7 +60,7 @@ public class DynamicDataStore extends AbstractDataStore {
     }
 
     // registry gọi
-    public void registerEntity(EntityMeta meta) {
+    public void registerEntity(DynamicEntity meta) {
         entities.put(meta.getName(), meta);
     }
 

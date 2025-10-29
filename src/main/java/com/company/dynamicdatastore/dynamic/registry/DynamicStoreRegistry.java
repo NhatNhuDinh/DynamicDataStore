@@ -1,7 +1,7 @@
 package com.company.dynamicdatastore.dynamic.registry;
 
 import com.company.dynamicdatastore.dynamic.DynamicDataStore;
-import com.company.dynamicdatastore.dynamic.EntityMeta;
+import com.company.dynamicdatastore.dynamic.DynamicEntity;
 import com.company.dynamicdatastore.dynamic.virtual.VirtualEntityHandler;
 import io.jmix.core.EntityStates;
 import io.jmix.core.KeyValueMapper;
@@ -72,7 +72,7 @@ public class DynamicStoreRegistry {
         return stores.get(storeName);
     }
 
-    public void addEntity(String storeName, EntityMeta meta) {
+    public void addEntity(String storeName, DynamicEntity meta) {
         registerStore(storeName).registerEntity(meta);
     }
 

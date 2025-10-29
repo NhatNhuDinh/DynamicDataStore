@@ -1,8 +1,6 @@
-package com.company.dynamicdatastore.dynamic.runtime;
-import com.company.dynamicdatastore.dynamic.DynamicMetaClass;
-import com.company.dynamicdatastore.dynamic.RuntimeFieldDef;
+package com.company.dynamicdatastore.dynamic.meta;
+import com.company.dynamicdatastore.dynamic.DynamicField;
 import com.company.dynamicdatastore.dynamic.registry.DynamicStoreRegistry;
-import io.jmix.core.Stores;
 import io.jmix.core.impl.keyvalue.KeyValueMetaClassFactory;
 import io.jmix.core.metamodel.model.MetaClass;
 import org.springframework.stereotype.Component;
@@ -27,7 +25,7 @@ public class DynamicMetaClassFactory {
     }
 
     public MetaClass buildAndRegisterMetaClass(String entityName,
-                                               List<RuntimeFieldDef> fields,
+                                               List<DynamicField> fields,
                                                String storeName) {
 
         // 1. Tạo KeyValueMetaClass động nhưng với tên entityName của mình
@@ -36,7 +34,7 @@ public class DynamicMetaClassFactory {
         // 2. Add các property động bằng configurer
         KeyValueMetaClassFactory.Configurer configurer =
                 keyValueMetaClassFactory.configurer(metaClass);
-        for (RuntimeFieldDef f : fields) {
+        for (DynamicField f : fields) {
             configurer.addProperty(f.getName(), f.getJavaType());
         }
         dynamicStoreRegistry.registerMetaClass(storeName, entityName, metaClass);
