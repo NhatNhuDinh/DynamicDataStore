@@ -72,6 +72,8 @@ public class DynamicDataStore extends AbstractDataStore {
     @Override
     @Nullable
     protected Object loadOne(LoadContext<?> context) {
+        Object id = context.getId();
+        Class<Object> entityClass = context.getEntityMetaClass().getJavaClass();
         String entityName = context.getEntityMetaClass().getName();
         VirtualEntityHandler<Object> handler = getHandler(entityName);
         if (handler == null) {
@@ -79,13 +81,16 @@ public class DynamicDataStore extends AbstractDataStore {
             return null;
         }
 
-        Object id = context.getId(); // có thể null
-        return handler.loadOne((LoadContext<Object>) context, id);
+        Object one = handler.loadOne((LoadContext<Object>) context, id);
+
+        // có thể null
+        return one;
     }
 
     //====================== LOAD LIST ======================
     @Override
     protected List<Object> loadAll(LoadContext<?> context) {
+        Class<Object> entityClass = context.getEntityMetaClass().getJavaClass();
         String entityName = context.getEntityMetaClass().getName();
         VirtualEntityHandler<Object> handler = getHandler(entityName);
         if (handler == null) {
@@ -105,34 +110,7 @@ public class DynamicDataStore extends AbstractDataStore {
         return handler.loadAll((LoadContext<Object>) context);
     }
 
-    @Override
-    public List<KeyValueEntity> loadValues(ValueLoadContext context) {
-        // 1. Xác định entityName từ query JPQL-like "select e.x from VirtualOrder e"
-        String entityName = extractEntityNameFromValueQuery(context);
 
-        VirtualEntityHandler<Object> handler = getHandler(entityName);
-        if (handler == null) {
-            log.warn("No handler registered for entity '{}' (ValueLoadContext direct)", entityName);
-            return Collections.emptyList();
-        }
-
-        // 2. Lấy data từ handler (handler trả List<KeyValueEntity> đã có giá trị id/name/amount)
-        List<KeyValueEntity> rawList = handler.loadAllKeyValue(context);
-
-        // 3. Gắn metaClass runtime tương ứng để Jmix UI/DataGrid có thể đọc schema
-        //    metaClass đã được dynamicMetaClassFactory đăng ký vào registry bằng registerMetaClass(...)
-        MetaClass mc = registry.getMetaClass(storeName, entityName);
-        if (mc != null) {
-            for (KeyValueEntity e : rawList) {
-                e.setInstanceMetaClass(mc);
-            }
-        } else {
-            log.warn("No MetaClass registered for {} in store {}", entityName, storeName);
-        }
-
-        // 4. trả thẳng luôn, bỏ qua keyValueMapper.mapValues
-        return rawList;
-    }
 
 
     @Override

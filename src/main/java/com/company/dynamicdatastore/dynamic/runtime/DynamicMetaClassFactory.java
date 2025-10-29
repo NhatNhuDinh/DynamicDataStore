@@ -4,6 +4,7 @@ import com.company.dynamicdatastore.dynamic.RuntimeFieldDef;
 import com.company.dynamicdatastore.dynamic.registry.DynamicStoreRegistry;
 import io.jmix.core.Stores;
 import io.jmix.core.impl.keyvalue.KeyValueMetaClassFactory;
+import io.jmix.core.impl.keyvalue.KeyValueMetaProperty;
 import io.jmix.core.metamodel.model.MetaClass;
 import org.springframework.stereotype.Component;
 
@@ -32,15 +33,17 @@ public class DynamicMetaClassFactory {
 
         // 1. Tạo KeyValueMetaClass động nhưng với tên entityName của mình
         DynamicMetaClass metaClass = new DynamicMetaClass();
-        metaClass.setName(entityName);                 // override name (mặc định là "sys_KeyValueEntity")
+        metaClass.setName(entityName);
+        metaClass.setStore(new RuntimeStore(storeName));
+        // override name (mặc định là "sys_KeyValueEntity")
         // 2. Add các property động bằng configurer
         KeyValueMetaClassFactory.Configurer configurer =
                 keyValueMetaClassFactory.configurer(metaClass);
         for (RuntimeFieldDef f : fields) {
             configurer.addProperty(f.getName(), f.getJavaType());
         }
-        dynamicStoreRegistry.registerMetaClass(storeName, entityName, metaClass);
 
+        dynamicStoreRegistry.registerMetaClass(storeName, entityName, metaClass);
         return metaClass;
     }
 }

@@ -10,6 +10,7 @@ import com.company.dynamicdatastore.view.main.MainView;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.DataManager;
 import io.jmix.core.LoadContext;
+import io.jmix.core.MetadataTools;
 import io.jmix.core.ValueLoadContext;
 import io.jmix.core.entity.KeyValueEntity;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -54,6 +55,8 @@ public class DynamicDataStore extends StandardView {
 
     @ViewComponent
     private DataGrid<KeyValueEntity> rowsGrid;
+    @Autowired
+    private MetadataTools metadataTools;
 
     @Subscribe
     public void onInit(InitEvent event) {
@@ -175,10 +178,21 @@ public class DynamicDataStore extends StandardView {
 
 
     private void loadRowsFromDynamicStore() {
-        List<KeyValueEntity> rows = dataManager
-                .loadValues("select e.id, e.name, e.amount from VirtualOrder e")
-                .store("storeA")
-                .list();
-        rowsDc.setItems(rows);
+
+        MetaClass meta = dynamicMetaClassFactory.buildAndRegisterMetaClass(
+                "VirtualOrder",
+                List.of(
+                        new RuntimeFieldDef("id", UUID.class),
+                        new RuntimeFieldDef("name", String.class),
+                        new RuntimeFieldDef("amount", BigDecimal.class)
+                ),
+                "storeA"
+        );
+        // 2. Tạo LoadContext dựa trên MetaClass đó
+        LoadContext<Object> ctx = new LoadContext<>(meta);
+        ctx.setId("id");
+       dataManager.load(ctx);
+
+
     }
 }
