@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="DynamicDataStore">
+        <dropForeignKeyConstraint baseTableName="dynamic_class" constraintName="fk_dynamic_class_on_data_store"/>
+    </changeSet>
+    <changeSet id="2" author="DynamicDataStore">
+        <createTable tableName="DYNAMIC_ENTITY">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_DYNAMIC_ENTITY"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="STORE_ID" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="DynamicDataStore">
+        <addColumn tableName="DYNAMIC_ATTRIBUTE">
+            <column name="ENTITY_ID" type="UUID"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="4" author="DynamicDataStore">
+        <createIndex indexName="IDX_DYNAMIC_ATTRIBUTE_ENTITY" tableName="DYNAMIC_ATTRIBUTE">
+            <column name="ENTITY_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="ENTITY_ID" baseTableName="DYNAMIC_ATTRIBUTE"
+                                 constraintName="FK_DYNAMIC_ATTRIBUTE_ON_ENTITY" referencedColumnNames="ID"
+                                 referencedTableName="DYNAMIC_ENTITY"/>
+    </changeSet>
+    <changeSet id="5" author="DynamicDataStore">
+        <createIndex indexName="IDX_DYNAMIC_ENTITY_STORE" tableName="DYNAMIC_ENTITY">
+            <column name="STORE_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="STORE_ID" baseTableName="DYNAMIC_ENTITY"
+                                 constraintName="FK_DYNAMIC_ENTITY_ON_STORE" referencedColumnNames="ID"
+                                 referencedTableName="DYNAMIC_DATA_STORE"/>
+    </changeSet>
+    <changeSet id="6" author="DynamicDataStore">
+        <dropTable cascadeConstraints="true" tableName="dynamic_class"/>
+    </changeSet>
+    <changeSet id="7" author="DynamicDataStore">
+        <dropColumn columnName="dynamic_class_id" tableName="dynamic_attribute"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="DynamicDataStore">
+        <dropForeignKeyConstraint baseTableName="dynamic_attribute" constraintName="fk_dynamic_attribute_on_entity"/>
+    </changeSet>
+    <changeSet id="2" author="DynamicDataStore">
+        <dropForeignKeyConstraint baseTableName="dynamic_entity" constraintName="fk_dynamic_entity_on_store"/>
+    </changeSet>
+    <changeSet id="3" author="DynamicDataStore">
+        <dropTable cascadeConstraints="true" tableName="dynamic_attribute"/>
+    </changeSet>
+    <changeSet id="4" author="DynamicDataStore">
+        <dropTable cascadeConstraints="true" tableName="dynamic_data_store"/>
+    </changeSet>
+    <changeSet id="5" author="DynamicDataStore">
+        <dropTable cascadeConstraints="true" tableName="dynamic_entity"/>
+    </changeSet>
+</databaseChangeLog>
